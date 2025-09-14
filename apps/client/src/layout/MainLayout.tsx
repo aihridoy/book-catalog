@@ -1,11 +1,11 @@
-import Hero from "../components/Hero";
+import { Outlet } from "react-router";
 import Navbar from "./Navbar";
 
 export default function MainLayout() {
   return (
     <div>
       <Navbar />
-      <Hero />
+      <Outlet />
     </div>
   );
 }
