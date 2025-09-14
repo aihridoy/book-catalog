@@ -5,6 +5,7 @@ const app = express();
 const { connectDB } = require("./utils/db");
 const { port } = require("./utils/config");
 const userRoutes = require("./routes/userRoute");
+const bookRoutes = require("./routes/bookRoutes");
 
 app.use(cors());
 app.use(express.json());
@@ -12,6 +13,7 @@ app.use(express.json());
 connectDB();
 
 app.use(userRoutes);
+app.use(bookRoutes);
 
 app.get("/", (req, res) => {
   res.send("Hello World!");

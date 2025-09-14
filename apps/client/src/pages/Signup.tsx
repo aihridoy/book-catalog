@@ -51,7 +51,7 @@ export default function Signup() {
       className="flex justify-center items-center min-h-screen bg-cover bg-center relative"
       style={{
         backgroundImage:
-          "url('https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1600&q=80')",
+          "url('https://images.unsplash.com/photo-1729569297607-c65f976471c5?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')",
       }}
     >
       <div className="absolute inset-0 bg-black/40"></div>
