@@ -2,13 +2,16 @@ const { User } = require("../models/userModel");
 
 exports.addUser = async (req, res) => {
   try {
-    const { email, password } = req.body;
-    if (!email || !password) {
+    const { email, password, username } = req.body;
+    if (!email || !password || !username) {
       return res
         .status(400)
-        .send({ status: false, error: "Email and password are required" });
+        .send({
+          status: false,
+          error: "Email, password, and username are required",
+        });
     }
-    const user = new User({ email, password });
+    const user = new User({ email, password, username });
     const savedUser = await user.save();
     const token = savedUser.generateAuthToken();
     res
@@ -23,7 +26,7 @@ exports.getUserByEmail = async (req, res) => {
   try {
     const user = await User.findOne({ email: req.params.email }).select(
       "-password"
-    ); // Exclude password
+    );
     if (user) {
       return res.send({ status: true, data: user });
     }
