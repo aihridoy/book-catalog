@@ -15,6 +15,9 @@ export default function Login() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const isLoading = useAppSelector((state) => state.user.isLoading);
+  const isError = useAppSelector((state) => state.user.isError);
+  const error = useAppSelector((state) => state.user.error);
+  console.log(isError, error);
 
   const onFinish = async (values: UserLogin) => {
     dispatch(setLoading(true));
@@ -82,6 +85,11 @@ export default function Login() {
             </Button>
           </Form.Item>
         </Form>
+        {isError && (
+          <div className="bg-red-50 border border-red-200 text-red-600 text-sm px-4 py-2 rounded-md text-center mb-4">
+            {error}
+          </div>
+        )}
         <p className="text-center text-sm text-gray-600 mt-4">
           Don’t have an account?{" "}
           <Link

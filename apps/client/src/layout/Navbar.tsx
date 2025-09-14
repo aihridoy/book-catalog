@@ -35,7 +35,7 @@ export default function Navbar() {
           ) : (
             <button
               onClick={handleLogout}
-              className="hover:text-gray-300"
+              className="hover:text-gray-300 cursor-pointer"
               disabled={isLoading}
             >
               Logout
