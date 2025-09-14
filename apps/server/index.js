@@ -1,14 +1,22 @@
-// server.js
 const express = require("express");
-const app = express();
+const cors = require("cors");
 
-// Basic route
+const app = express();
+const { connectDB } = require("./utils/db");
+const { port } = require("./utils/config");
+const userRoutes = require("./routes/userRoute");
+
+app.use(cors());
+app.use(express.json());
+
+connectDB();
+
+app.use(userRoutes);
+
 app.get("/", (req, res) => {
-  res.send("Hello, Express server is running on port 8000 🚀");
+  res.send("Hello World!");
 });
 
-// Start server
-const PORT = 8000;
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`);
 });
