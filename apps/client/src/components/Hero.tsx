@@ -10,7 +10,6 @@ const { Search } = Input;
 
 export default function Hero() {
   const handleSearch = (value) => {
-    console.log("Searching for:", value);
     // Implement search functionality
   };
 

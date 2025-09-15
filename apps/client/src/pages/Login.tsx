@@ -17,7 +17,6 @@ export default function Login() {
   const isLoading = useAppSelector((state) => state.user.isLoading);
   const isError = useAppSelector((state) => state.user.isError);
   const error = useAppSelector((state) => state.user.error);
-  console.log(isError, error);
 
   const onFinish = async (values: UserLogin) => {
     dispatch(setLoading(true));

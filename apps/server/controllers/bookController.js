@@ -2,13 +2,20 @@ const { Book } = require("../models/bookModel");
 
 exports.addBook = async (req, res) => {
   try {
-    const { image, title, author, genre, publicationDate } = req.body;
-    if (!image || !title || !author || !genre || !publicationDate) {
+    const { image, title, author, genre, publicationDate, userId } = req.body;
+    if (!image || !title || !author || !genre || !publicationDate || !userId) {
       return res
         .status(400)
         .send({ status: false, error: "All fields are required" });
     }
-    const book = new Book({ image, title, author, genre, publicationDate });
+    const book = new Book({
+      image,
+      title,
+      author,
+      genre,
+      publicationDate,
+      userId,
+    });
     const savedBook = await book.save();
     res.status(201).send({ status: true, data: savedBook });
   } catch (err) {

@@ -1,4 +1,3 @@
-// src/components/AddBook.tsx
 import { Form, Input, Button, DatePicker } from "antd";
 import { useState } from "react";
 import { useAddBookMutation } from "../redux/features/book/bookApi";
@@ -14,11 +13,11 @@ export default function AddBook() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { isLoading } = useAppSelector((state) => state.book);
+  const { user } = useAppSelector((state) => state.user);
 
   const onFinish = async (values: IBook & { confirmPassword?: string }) => {
     dispatch(setLoading(true));
 
-    // Use the provided imageUrl or a fallback Unsplash URL
     const finalImageUrl = imageUrl || "https://via.placeholder.com/150";
     const bookData: IBook = {
       image: finalImageUrl,
@@ -26,6 +25,7 @@ export default function AddBook() {
       author: values.author || "",
       genre: values.genre || "",
       publicationDate: values.publicationDate?.toString() || "",
+      userId: user?._id || "",
     };
 
     try {

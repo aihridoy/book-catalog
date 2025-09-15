@@ -3,7 +3,7 @@ import { api } from "../../api/apiSlice";
 
 const bookApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    addBook: builder.mutation<IBook, Partial<IBook>>({
+    addBook: builder.mutation<IBook, Partial<IBook> & { userId: string }>({
       query: (bookData) => ({
         url: "/book",
         method: "POST",
@@ -30,7 +30,10 @@ const bookApi = api.injectEndpoints({
       query: (id) => `/books/${id}`,
       providesTags: ["Book"],
     }),
-    editBook: builder.mutation<IBook, { id: string; data: Partial<IBook> }>({
+    editBook: builder.mutation<
+      IBook,
+      { id: string; data: Partial<IBook> & { userId: string } }
+    >({
       query: ({ id, data }) => ({
         url: `/books/${id}`,
         method: "PATCH",

@@ -42,6 +42,7 @@ export interface IBook {
   author: string;
   genre: string;
   publicationDate: string;
+  userId: string;
   createdAt?: string;
   updatedAt?: string;
   __v?: number;

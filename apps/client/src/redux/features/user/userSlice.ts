@@ -47,7 +47,11 @@ const userSlice = createSlice({
             exp: number;
           } = jwtDecode(token);
           if (decoded.exp * 1000 > Date.now()) {
-            state.user = { email: decoded.email, token } as IUser;
+            state.user = {
+              _id: decoded.id,
+              email: decoded.email,
+              token,
+            } as IUser;
           } else {
             localStorage.removeItem("token");
           }

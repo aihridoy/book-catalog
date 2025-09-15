@@ -1,4 +1,3 @@
-// src/redux/features/book/bookSlice.ts
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import type { IBook } from "../../../types";
