@@ -6,7 +6,6 @@ import { useAppDispatch, useAppSelector } from "../redux/hook";
 export default function Navbar() {
   const dispatch = useAppDispatch();
   const { user, isLoading } = useAppSelector((state) => state.user);
-  console.log(user);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleLogout = () => {
@@ -33,13 +32,18 @@ export default function Navbar() {
               </Link>
             </>
           ) : (
-            <button
-              onClick={handleLogout}
-              className="hover:text-gray-300 cursor-pointer"
-              disabled={isLoading}
-            >
-              Logout
-            </button>
+            <>
+              <Link to="/add-book" className="hover:text-gray-300">
+                Add Book
+              </Link>
+              <button
+                onClick={handleLogout}
+                className="hover:text-gray-300 cursor-pointer"
+                disabled={isLoading}
+              >
+                Logout
+              </button>
+            </>
           )}
         </div>
 
@@ -87,16 +91,25 @@ export default function Navbar() {
                 </Link>
               </>
             ) : (
-              <button
-                onClick={() => {
-                  handleLogout();
-                  setIsMobileMenuOpen(false);
-                }}
-                className="block w-full text-left px-3 py-2 rounded-md text-base font-medium hover:bg-gray-700"
-                disabled={isLoading}
-              >
-                Logout
-              </button>
+              <>
+                <Link
+                  to="/add-book"
+                  className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-700"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Add Book
+                </Link>
+                <button
+                  onClick={() => {
+                    handleLogout();
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="block w-full text-left px-3 py-2 rounded-md text-base font-medium hover:bg-gray-700"
+                  disabled={isLoading}
+                >
+                  Logout
+                </button>
+              </>
             )}
           </div>
         )}
