@@ -47,3 +47,8 @@ export interface IBook {
   updatedAt?: string;
   __v?: number;
 }
+export interface IBookResponse {
+  status: boolean;
+  data: IBook[];
+  error?: string;
+}

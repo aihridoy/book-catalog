@@ -29,6 +29,9 @@ importers:
       antd:
         specifier: ^5.27.3
         version: 5.27.3(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      dayjs:
+        specifier: ^1.11.18
+        version: 1.11.18
       jwt-decode:
         specifier: ^4.0.0
         version: 4.0.0
