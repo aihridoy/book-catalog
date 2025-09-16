@@ -11,10 +11,9 @@ import {
   ArrowLeftOutlined,
 } from "@ant-design/icons";
 import { useAddBookMutation } from "../redux/features/book/bookApi";
-import { setLoading, setError } from "../redux/features/book/bookSlice";
 import { useNavigate } from "react-router";
 import type { IBook } from "../types";
-import { useAppDispatch, useAppSelector } from "../redux/hook";
+import { useAppSelector } from "../redux/hook";
 
 const { Option } = Select;
 
@@ -27,10 +26,8 @@ export default function AddBook() {
     genre: "",
     publicationDate: null as Dayjs | null,
   });
-  const [addBook] = useAddBookMutation();
-  const dispatch = useAppDispatch();
+  const [addBook, { isLoading }] = useAddBookMutation();
   const navigate = useNavigate();
-  const { isLoading } = useAppSelector((state) => state.book);
   const { user } = useAppSelector((state) => state.user);
 
   const popularGenres = [
@@ -67,8 +64,6 @@ export default function AddBook() {
   }, [watchedValues, form]);
 
   const onFinish = async (values: IBook & { confirmPassword?: string }) => {
-    dispatch(setLoading(true));
-
     const finalImageUrl = imageUrl || "https://via.placeholder.com/150";
     const bookData: IBook = {
       image: finalImageUrl,
@@ -81,7 +76,6 @@ export default function AddBook() {
 
     try {
       await addBook(bookData).unwrap();
-      dispatch(setLoading(false));
       form.resetFields();
       setImageUrl("");
       setPreviewData({
@@ -96,8 +90,6 @@ export default function AddBook() {
       const errorMessage =
         (err as { data?: { error?: string } })?.data?.error ||
         "Failed to add book";
-      dispatch(setError(errorMessage));
-      dispatch(setLoading(false));
       message.error(errorMessage);
     }
   };

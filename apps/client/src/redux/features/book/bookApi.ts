@@ -1,6 +1,5 @@
 import type { IBook, IBookResponse } from "../../../types";
 import { api } from "../../api/apiSlice";
-import { setBooks } from "./bookSlice";
 
 const bookApi = api.injectEndpoints({
   endpoints: (builder) => ({
@@ -11,14 +10,6 @@ const bookApi = api.injectEndpoints({
         body: bookData,
       }),
       invalidatesTags: ["Book"],
-      async onQueryStarted(_, { dispatch, queryFulfilled }) {
-        try {
-          const { data } = await queryFulfilled;
-          dispatch(setBooks([data]));
-        } catch (err) {
-          throw new Error(String(err));
-        }
-      },
     }),
     getBooks: builder.query<
       IBookResponse,
@@ -34,14 +25,6 @@ const bookApi = api.injectEndpoints({
         };
       },
       providesTags: ["Book"],
-      async onQueryStarted(_, { dispatch, queryFulfilled }) {
-        try {
-          const { data } = await queryFulfilled;
-          dispatch(setBooks(data.data));
-        } catch (err) {
-          throw new Error(String(err));
-        }
-      },
     }),
     getBookById: builder.query<IBook, string>({
       query: (id) => `/books/${id}`,

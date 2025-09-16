@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import type { PayloadAction } from "@reduxjs/toolkit";
 import type { IBook } from "../../../types";
 
 interface BookState {
@@ -21,23 +20,7 @@ const initialState: BookState = {
 const bookSlice = createSlice({
   name: "book",
   initialState,
-  reducers: {
-    setBooks: (state, action: PayloadAction<IBook[]>) => {
-      state.books = action.payload;
-    },
-    setSelectedBook: (state, action: PayloadAction<IBook | null>) => {
-      state.selectedBook = action.payload;
-    },
-    setLoading: (state, action: PayloadAction<boolean>) => {
-      state.isLoading = action.payload;
-    },
-    setError: (state, action: PayloadAction<string | null>) => {
-      state.isError = action.payload !== null;
-      state.error = action.payload;
-    },
-  },
+  reducers: {},
 });
 
-export const { setBooks, setSelectedBook, setLoading, setError } =
-  bookSlice.actions;
 export default bookSlice.reducer;
