@@ -43,6 +43,7 @@ const userSlice = createSlice({
           const decoded: {
             id: string;
             email: string;
+            username: string;
             iat: number;
             exp: number;
           } = jwtDecode(token);
@@ -50,6 +51,7 @@ const userSlice = createSlice({
             state.user = {
               _id: decoded.id,
               email: decoded.email,
+              username: decoded.username,
               token,
             } as IUser;
           } else {
