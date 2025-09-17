@@ -56,6 +56,26 @@ exports.getBooks = async (req, res) => {
   }
 };
 
+exports.getBooksByGenre = async (req, res) => {
+  try {
+    const { genre } = req.params;
+    if (!genre) {
+      return res
+        .status(400)
+        .send({ status: false, error: "Genre is required" });
+    }
+
+    const query = {
+      genre: { $regex: genre, $options: "i" },
+    };
+
+    const books = await Book.find(query).sort({ createdAt: -1 });
+    res.send({ status: true, data: books });
+  } catch (err) {
+    res.status(500).send({ status: false, error: err.message });
+  }
+};
+
 exports.getBookById = async (req, res) => {
   try {
     const book = await Book.findById(req.params.id);

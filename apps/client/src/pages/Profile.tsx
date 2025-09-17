@@ -1,13 +1,38 @@
 import { Link } from "react-router";
-import { useGetBooksQuery } from "../redux/features/book/bookApi";
+import {
+  useGetBooksQuery,
+  useGetBooksByGenreQuery,
+} from "../redux/features/book/bookApi";
 import { useAppSelector } from "../redux/hook";
 import { BookOutlined, UserOutlined, MailOutlined } from "@ant-design/icons";
+import { useState } from "react";
 
 export default function Profile() {
   const { user } = useAppSelector((state) => state.user);
-  const { data, isLoading } = useGetBooksQuery({});
-  const books = data?.data || [];
-  const myBooks = books.filter((book) => book?.userId === user?._id);
+  const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
+
+  // Fetch all books
+  const { data: allBooksData, isLoading: isAllBooksLoading } = useGetBooksQuery(
+    {}
+  );
+  const allBooks = allBooksData?.data || [];
+  const myBooks = allBooks.filter((book) => book?.userId === user?._id);
+
+  // Fetch books by genre (only if a genre is selected)
+  const { data: genreBooksData, isLoading: isGenreBooksLoading } =
+    useGetBooksByGenreQuery(
+      selectedGenre || "",
+      { skip: !selectedGenre } // Skip query if no genre is selected
+    );
+  const genreBooks =
+    genreBooksData?.data?.filter((book) => book?.userId === user?._id) || [];
+
+  // Get unique genres from myBooks
+  const genres = [...new Set(myBooks.map((book) => book.genre))];
+
+  // Determine which books to display
+  const displayedBooks = selectedGenre ? genreBooks : myBooks;
+  const isLoading = selectedGenre ? isGenreBooksLoading : isAllBooksLoading;
 
   return (
     <div className="relative bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 min-h-screen overflow-hidden">
@@ -16,7 +41,6 @@ export default function Profile() {
         <div className="absolute top-20 left-10 w-32 h-32 bg-amber-200 rounded-full opacity-20 animate-pulse"></div>
         <div className="absolute top-40 right-20 w-24 h-24 bg-orange-200 rounded-full opacity-30 animate-bounce"></div>
         <div className="absolute bottom-20 left-1/4 w-20 h-20 bg-red-200 rounded-full opacity-25"></div>
-        {/* Book spine decorations */}
         <div className="absolute right-0 top-0 h-full w-24 bg-gradient-to-l from-amber-100 to-transparent opacity-40">
           <div className="h-full flex flex-col justify-evenly px-2">
             <div className="h-8 bg-red-300 rounded-sm opacity-60"></div>
@@ -35,7 +59,7 @@ export default function Profile() {
               <UserOutlined className="text-6xl text-amber-600 animate-pulse" />
             </div>
             <h1 className="text-4xl lg:text-5xl font-bold text-gray-800 mb-2">
-              {user?.username || "User"}
+              {user?.username?.split(" ")[0] || "User"}
             </h1>
             <p className="text-xl text-gray-600 flex items-center justify-center gap-2">
               <MailOutlined className="text-amber-600" />
@@ -57,11 +81,44 @@ export default function Profile() {
               My Books
             </span>
           </h2>
+
+          {/* Genre Filters */}
+          <div className="mb-8 text-center">
+            <p className="text-gray-600 mb-4 font-medium">Filter by Genre:</p>
+            <div className="flex flex-wrap justify-center gap-3">
+              <button
+                onClick={() => setSelectedGenre(null)}
+                className={`px-4 py-2 rounded-full text-gray-700 transition-colors border border-amber-200 hover:border-amber-400 ${
+                  !selectedGenre
+                    ? "bg-amber-100 text-amber-800 font-medium"
+                    : "bg-white bg-opacity-80 backdrop-blur-sm"
+                }`}
+              >
+                All
+              </button>
+              {genres.map((genre) => (
+                <button
+                  key={genre}
+                  onClick={() => setSelectedGenre(genre)}
+                  className={`px-4 py-2 rounded-full text-gray-700 transition-colors border border-amber-200 hover:border-amber-400 ${
+                    selectedGenre === genre
+                      ? "bg-amber-100 text-amber-800 font-medium"
+                      : "bg-white bg-opacity-80 backdrop-blur-sm"
+                  }`}
+                >
+                  {genre}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Books Display */}
           {isLoading ? (
             <div className="text-center text-gray-600">Loading books...</div>
-          ) : myBooks.length === 0 ? (
+          ) : displayedBooks.length === 0 ? (
             <div className="text-center text-gray-600">
-              No books added yet.{" "}
+              No books{" "}
+              {selectedGenre ? `found for ${selectedGenre}` : "added yet"}.{" "}
               <Link
                 to="/add-book"
                 className="text-amber-600 hover:text-amber-800 underline"
@@ -71,7 +128,7 @@ export default function Profile() {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {myBooks.map((book) => (
+              {displayedBooks.map((book) => (
                 <Link
                   key={book._id}
                   to={`/book-details/${book._id}`}

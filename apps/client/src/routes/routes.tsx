@@ -6,6 +6,7 @@ import Home from "../pages/Home";
 import AddBook from "../pages/AddBook";
 import BookDetails from "../pages/BookDetails";
 import Profile from "../pages/Profile";
+import BooksByGenre from "../pages/BooksByGenre";
 
 const routes = createBrowserRouter([
   {
@@ -27,6 +28,10 @@ const routes = createBrowserRouter([
       {
         path: "/profile",
         element: <Profile />,
+      },
+      {
+        path: "/books/genre/:genre",
+        element: <BooksByGenre />,
       },
     ],
   },

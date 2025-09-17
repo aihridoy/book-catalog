@@ -26,6 +26,10 @@ const bookApi = api.injectEndpoints({
       },
       providesTags: ["Book"],
     }),
+    getBooksByGenre: builder.query<IBookResponse, string>({
+      query: (genre) => `/books/genre/${encodeURIComponent(genre)}`,
+      providesTags: ["Book"],
+    }),
     getBookById: builder.query<{ status: boolean; data: IBook }, string>({
       query: (id) => `/books/${id}`,
       providesTags: ["Book"],
@@ -54,6 +58,7 @@ const bookApi = api.injectEndpoints({
 export const {
   useAddBookMutation,
   useGetBooksQuery,
+  useGetBooksByGenreQuery,
   useGetBookByIdQuery,
   useEditBookMutation,
   useDeleteBookMutation,

@@ -1,6 +1,11 @@
 import { BookOutlined, StarOutlined } from "@ant-design/icons";
+import { useGetBooksQuery } from "../redux/features/book/bookApi";
+import { Link } from "react-router";
 
 export default function Hero() {
+  const { data } = useGetBooksQuery({});
+  const books = data?.data || [];
+  const genres = [...new Set(books.map((book) => book.genre))];
   return (
     <div className="relative bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 overflow-hidden">
       {/* Background decorative elements */}
@@ -66,20 +71,14 @@ export default function Hero() {
           <div className="mt-12">
             <p className="text-gray-600 mb-4 font-medium">Popular Genres:</p>
             <div className="flex flex-wrap justify-center gap-3">
-              {[
-                "Fiction",
-                "Mystery",
-                "Romance",
-                "Sci-Fi",
-                "Biography",
-                "Self-Help",
-              ].map((genre) => (
-                <span
+              {genres?.map((genre) => (
+                <Link
+                  to={`/books/genre/${genre}`}
                   key={genre}
                   className="bg-white bg-opacity-80 backdrop-blur-sm px-4 py-2 rounded-full text-gray-700 hover:bg-amber-100 transition-colors cursor-pointer border border-amber-200 hover:border-amber-400"
                 >
                   {genre}
-                </span>
+                </Link>
               ))}
             </div>
           </div>
