@@ -26,7 +26,7 @@ const bookApi = api.injectEndpoints({
       },
       providesTags: ["Book"],
     }),
-    getBookById: builder.query<IBook, string>({
+    getBookById: builder.query<{ status: boolean; data: IBook }, string>({
       query: (id) => `/books/${id}`,
       providesTags: ["Book"],
     }),
