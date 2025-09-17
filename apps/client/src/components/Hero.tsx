@@ -1,18 +1,6 @@
-import { Button, Input } from "antd";
-import {
-  SearchOutlined,
-  BookOutlined,
-  HeartOutlined,
-  StarOutlined,
-} from "@ant-design/icons";
-
-const { Search } = Input;
+import { BookOutlined, StarOutlined } from "@ant-design/icons";
 
 export default function Hero() {
-  const handleSearch = (value) => {
-    // Implement search functionality
-  };
-
   return (
     <div className="relative bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 overflow-hidden">
       {/* Background decorative elements */}
@@ -52,41 +40,6 @@ export default function Hero() {
             Explore thousands of books, create your personal library, and
             connect with fellow book lovers. Your literary journey starts here.
           </p>
-
-          {/* Search bar */}
-          <div className="mb-8 max-w-2xl mx-auto">
-            <Search
-              placeholder="Search for books, authors, or genres..."
-              size="large"
-              className="shadow-lg"
-              onSearch={handleSearch}
-              enterButton={
-                <Button
-                  type="primary"
-                  className="bg-amber-600 border-amber-600 hover:bg-amber-700 hover:border-amber-700 h-full px-8"
-                >
-                  <SearchOutlined /> Find Books
-                </Button>
-              }
-            />
-          </div>
-
-          {/* Action buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <Button
-              type="primary"
-              size="large"
-              className="bg-gradient-to-r from-amber-600 to-orange-600 border-none hover:from-amber-700 hover:to-orange-700 shadow-lg h-12 px-8 text-lg font-semibold"
-            >
-              <BookOutlined /> Browse Catalog
-            </Button>
-            <Button
-              size="large"
-              className="border-2 border-amber-600 text-amber-700 hover:bg-amber-50 h-12 px-8 text-lg font-semibold"
-            >
-              <HeartOutlined /> Create Wishlist
-            </Button>
-          </div>
 
           {/* Stats */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-3xl mx-auto">

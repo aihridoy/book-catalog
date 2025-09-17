@@ -8,6 +8,7 @@ import {
   EyeOutlined,
 } from "@ant-design/icons";
 import { useAppSelector } from "../redux/hook";
+import { Link } from "react-router";
 
 const { Meta } = Card;
 
@@ -214,14 +215,16 @@ export default function Books() {
                         </div>
 
                         <div className="flex gap-2 mt-4 pt-4 border-t border-gray-100">
-                          <Button
-                            type="primary"
-                            size="small"
-                            className="flex-1 bg-gradient-to-r from-amber-600 to-orange-600 border-none hover:from-amber-700 hover:to-orange-700 transition-all duration-300 hover:scale-105"
-                            icon={<EyeOutlined />}
-                          >
-                            View
-                          </Button>
+                          <Link to={`/book-details/${book?._id}`}>
+                            <Button
+                              type="primary"
+                              size="small"
+                              className="flex-1 bg-gradient-to-r from-amber-600 to-orange-600 border-none hover:from-amber-700 hover:to-orange-700 transition-all duration-300 hover:scale-105"
+                              icon={<EyeOutlined />}
+                            >
+                              View
+                            </Button>
+                          </Link>
                           <Button
                             size="small"
                             className="border-amber-300 text-amber-700 hover:bg-amber-50 hover:border-amber-400 transition-all duration-300 hover:scale-105"
