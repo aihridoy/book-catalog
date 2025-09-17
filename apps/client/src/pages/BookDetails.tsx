@@ -12,12 +12,17 @@ import {
 } from "@ant-design/icons";
 import RelatedBooks from "../components/RelatedBooks";
 import { Link } from "react-router";
+import { useEffect } from "react";
 
 const { Title, Text } = Typography;
 
 export default function BookDetails() {
   const { id } = useParams<{ id: string }>();
   const { data, isLoading, error } = useGetBookByIdQuery(id!, { skip: !id });
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [id]);
 
   if (isLoading) {
     return (

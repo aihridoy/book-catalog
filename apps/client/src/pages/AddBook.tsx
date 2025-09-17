@@ -63,6 +63,10 @@ export default function AddBook() {
     });
   }, [watchedValues, form]);
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
   const onFinish = async (values: IBook & { confirmPassword?: string }) => {
     const finalImageUrl = imageUrl || "https://via.placeholder.com/150";
     const bookData: IBook = {

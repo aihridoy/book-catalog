@@ -9,6 +9,8 @@ import {
   DownOutlined,
   CalendarOutlined,
   TagOutlined,
+  LoginOutlined,
+  UserAddOutlined,
 } from "@ant-design/icons";
 import { logout, setLoading } from "../redux/features/user/userSlice";
 import { useState, useMemo, useEffect, useRef } from "react";
@@ -59,9 +61,18 @@ export default function Navbar() {
         searchContainerRef.current &&
         !searchContainerRef.current.contains(event.target as Node)
       ) {
-        setIsSearchDropdownOpen(false);
-        setSearchValue("");
-        setDebouncedSearchValue("");
+        // Check if the clicked element is a search result item or its child
+        const clickedElement = event.target as HTMLElement;
+        const isSearchResultClick = clickedElement.closest(
+          "[data-search-result]"
+        );
+
+        // Only close if it's not a search result click
+        if (!isSearchResultClick) {
+          setIsSearchDropdownOpen(false);
+          setSearchValue("");
+          setDebouncedSearchValue("");
+        }
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -73,10 +84,13 @@ export default function Navbar() {
   };
 
   const handleResultClick = (bookId: string) => {
-    navigate(`/books/${bookId}`);
-    setSearchValue("");
-    setDebouncedSearchValue("");
-    setIsSearchDropdownOpen(false);
+    // Use setTimeout to ensure navigation happens before cleanup
+    setTimeout(() => {
+      navigate(`/book-details/${bookId}`);
+      setSearchValue("");
+      setDebouncedSearchValue("");
+      setIsSearchDropdownOpen(false);
+    }, 0);
   };
 
   const handleLogout = () => {
@@ -116,6 +130,7 @@ export default function Navbar() {
           booksResponse.data.map((book: IBook) => (
             <div
               key={book._id}
+              data-search-result="true"
               className="p-3 hover:bg-gray-700 cursor-pointer border-b border-gray-700 last:border-b-0 transition-all duration-200"
               onClick={() => book._id && handleResultClick(book._id)}
             >
@@ -168,7 +183,7 @@ export default function Navbar() {
         <div className="flex justify-between items-center">
           <Link
             to="/"
-            className="flex items-center gap-3 text-2xl font-bold text-white transition-colors duration-300 group"
+            className="flex items-center gap-3 text-2xl font-bold text-white transition-colors duration-300 group cursor-pointer"
             onClick={() => {
               setSearchValue("");
               setDebouncedSearchValue("");
@@ -210,14 +225,16 @@ export default function Navbar() {
               <>
                 <Link
                   to="/login"
-                  className="px-5 py-2.5 text-gray-200 hover:text-white hover:bg-gray-700 rounded-full transition-all duration-300 font-medium shadow-md hover:shadow-lg"
+                  className="px-5 py-2.5 text-gray-200 hover:text-white hover:bg-gray-700 rounded-full transition-all duration-300 font-medium shadow-md hover:shadow-lg flex items-center gap-2"
                 >
+                  <LoginOutlined />
                   Login
                 </Link>
                 <Link
                   to="/signup"
-                  className="px-5 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-full transition-all duration-300 font-medium shadow-lg hover:shadow-xl transform hover:scale-105"
+                  className="px-5 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-full transition-all duration-300 font-medium shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center gap-2"
                 >
+                  <UserAddOutlined />
                   Sign Up
                 </Link>
               </>
@@ -233,7 +250,7 @@ export default function Navbar() {
                 <Dropdown overlay={profileMenu} trigger={["click"]}>
                   <button className="flex items-center gap-2 px-5 py-2.5 text-gray-200 hover:text-white hover:bg-gray-700 rounded-full transition-all duration-300 font-medium shadow-md hover:shadow-lg">
                     <UserOutlined />
-                    <span>{user?.username || "Profile"}</span>
+                    <span>{user?.username?.split(" ")[0] || "Profile"}</span>
                     <DownOutlined className="text-xs" />
                   </button>
                 </Dropdown>
@@ -287,16 +304,18 @@ export default function Navbar() {
               <>
                 <Link
                   to="/login"
-                  className="block px-5 py-3 rounded-full text-base font-medium text-gray-200 hover:text-white hover:bg-gray-700 transition-all duration-300 shadow-md"
+                  className="flex items-center gap-3 px-5 py-3 rounded-full text-base font-medium text-gray-200 hover:text-white hover:bg-gray-700 transition-all duration-300 shadow-md"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
+                  <LoginOutlined />
                   Login
                 </Link>
                 <Link
                   to="/signup"
-                  className="block px-5 py-3 rounded-full text-base font-medium bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white transition-all duration-300 text-center shadow-md hover:shadow-lg"
+                  className="flex items-center justify-center gap-3 px-5 py-3 rounded-full text-base font-medium bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white transition-all duration-300 shadow-md hover:shadow-lg"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
+                  <UserAddOutlined />
                   Sign Up
                 </Link>
               </>
@@ -323,9 +342,10 @@ export default function Navbar() {
                     handleLogout();
                     setIsMobileMenuOpen(false);
                   }}
-                  className="block w-full text-left px-5 py-3 rounded-full text-base font-medium text-gray-200 hover:text-red-400 hover:bg-gray-700 transition-all duration-300 shadow-md"
+                  className="flex items-center gap-3 w-full text-left px-5 py-3 rounded-full text-base font-medium text-gray-200 hover:text-red-400 hover:bg-gray-700 transition-all duration-300 shadow-md"
                   disabled={isLoading}
                 >
+                  <LoginOutlined className="rotate-180" />
                   {isLoading ? "Logging out..." : "Logout"}
                 </button>
               </>
