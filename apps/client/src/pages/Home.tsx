@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import Books from "../components/Books";
 import Hero from "../components/Hero";
+import Footer from "../layout/Footer";
 
 export default function Home() {
   useEffect(() => {
@@ -10,6 +11,7 @@ export default function Home() {
     <div>
       <Hero />
       <Books />
+      <Footer />
     </div>
   );
 }
