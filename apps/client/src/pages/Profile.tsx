@@ -5,7 +5,7 @@ import {
 } from "../redux/features/book/bookApi";
 import { useAppSelector } from "../redux/hook";
 import { BookOutlined, UserOutlined, MailOutlined } from "@ant-design/icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Profile() {
   const { user } = useAppSelector((state) => state.user);
@@ -33,6 +33,10 @@ export default function Profile() {
   // Determine which books to display
   const displayedBooks = selectedGenre ? genreBooks : myBooks;
   const isLoading = selectedGenre ? isGenreBooksLoading : isAllBooksLoading;
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
   return (
     <div className="relative bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 min-h-screen overflow-hidden">

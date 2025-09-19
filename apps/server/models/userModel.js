@@ -24,9 +24,18 @@ userSchema.methods.comparePassword = async function (candidatePassword) {
 
 userSchema.methods.generateAuthToken = function () {
   const secret = process.env.JWT_SECRET;
-  return jwt.sign({ id: this._id, email: this.email }, secret, {
-    expiresIn: "1h",
-  });
+  return jwt.sign(
+    {
+      id: this._id,
+      email: this.email,
+      username: this.username,
+      createdAt: this.createdAt,
+    },
+    secret,
+    {
+      expiresIn: "1h",
+    }
+  );
 };
 
 const User = mongoose.model("User", userSchema);

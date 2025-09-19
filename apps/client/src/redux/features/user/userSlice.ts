@@ -44,6 +44,7 @@ const userSlice = createSlice({
             id: string;
             email: string;
             username: string;
+            createdAt: string;
             iat: number;
             exp: number;
           } = jwtDecode(token);
@@ -52,6 +53,7 @@ const userSlice = createSlice({
               _id: decoded.id,
               email: decoded.email,
               username: decoded.username,
+              createdAt: decoded.createdAt,
               token,
             } as IUser;
           } else {
