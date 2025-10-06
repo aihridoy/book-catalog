@@ -1,36 +1,37 @@
-import { Link } from "react-router";
 import {
   useGetBooksQuery,
   useGetBooksByGenreQuery,
+  useEditBookMutation,
+  useDeleteBookMutation,
 } from "../redux/features/book/bookApi";
 import { useAppSelector } from "../redux/hook";
-import { BookOutlined, UserOutlined, MailOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
+import UserDetails from "../components/UserDetails";
+import MyBooks from "../components/MyBooks";
+import EditBookModal from "../components/EditBookModal";
+import type { IBook } from "../types";
 
 export default function Profile() {
   const { user } = useAppSelector((state) => state.user);
   const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
+  const [editingBook, setEditingBook] = useState<IBook | null>(null);
+  const [editFormData, setEditFormData] = useState<Partial<IBook>>({});
 
-  // Fetch all books
   const { data: allBooksData, isLoading: isAllBooksLoading } = useGetBooksQuery(
     {}
   );
+  const { data: genreBooksData, isLoading: isGenreBooksLoading } =
+    useGetBooksByGenreQuery(selectedGenre || "", { skip: !selectedGenre });
+
+  const [editBook, { isLoading: isEditing }] = useEditBookMutation();
+  const [deleteBook, { isLoading: isDeleting }] = useDeleteBookMutation();
+
   const allBooks = allBooksData?.data || [];
   const myBooks = allBooks.filter((book) => book?.userId === user?._id);
-
-  // Fetch books by genre (only if a genre is selected)
-  const { data: genreBooksData, isLoading: isGenreBooksLoading } =
-    useGetBooksByGenreQuery(
-      selectedGenre || "",
-      { skip: !selectedGenre } // Skip query if no genre is selected
-    );
   const genreBooks =
     genreBooksData?.data?.filter((book) => book?.userId === user?._id) || [];
 
-  // Get unique genres from myBooks
   const genres = [...new Set(myBooks.map((book) => book.genre))];
-
-  // Determine which books to display
   const displayedBooks = selectedGenre ? genreBooks : myBooks;
   const isLoading = selectedGenre ? isGenreBooksLoading : isAllBooksLoading;
 
@@ -38,9 +39,47 @@ export default function Profile() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
+  const handleEditBook = (book: IBook) => {
+    setEditingBook(book);
+    setEditFormData({
+      image: book.image,
+      title: book.title,
+      author: book.author,
+      genre: book.genre,
+      publicationDate: book.publicationDate,
+    });
+  };
+
+  const handleSaveEdit = async () => {
+    if (!editingBook || !user?._id) return;
+
+    try {
+      await editBook({
+        id: editingBook._id!,
+        data: { ...editFormData, userId: user._id },
+      }).unwrap();
+
+      setEditingBook(null);
+      setEditFormData({});
+    } catch (error) {
+      console.error("Failed to update book:", error);
+    }
+  };
+
+  const handleDeleteBook = async (bookId: string) => {
+    try {
+      await deleteBook(bookId).unwrap();
+    } catch (error) {
+      console.error("Failed to delete book:", error);
+    }
+  };
+
+  const handleInputChange = (field: keyof IBook, value: string) => {
+    setEditFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
   return (
     <div className="relative bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 min-h-screen overflow-hidden">
-      {/* Background decorative elements */}
       <div className="absolute inset-0">
         <div className="absolute top-20 left-10 w-32 h-32 bg-amber-200 rounded-full opacity-20 animate-pulse"></div>
         <div className="absolute top-40 right-20 w-24 h-24 bg-orange-200 rounded-full opacity-30 animate-bounce"></div>
@@ -56,125 +95,28 @@ export default function Profile() {
       </div>
 
       <div className="relative container mx-auto px-6 py-16 lg:py-24">
-        {/* User Profile Section */}
-        <div className="max-w-4xl mx-auto text-center mb-12">
-          <div className="bg-white bg-opacity-70 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white border-opacity-50">
-            <div className="flex justify-center mb-4">
-              <UserOutlined className="text-6xl text-amber-600 animate-pulse" />
-            </div>
-            <h1 className="text-4xl lg:text-5xl font-bold text-gray-800 mb-2">
-              {user?.username?.split(" ")[0] || "User"}
-            </h1>
-            <p className="text-xl text-gray-600 flex items-center justify-center gap-2">
-              <MailOutlined className="text-amber-600" />
-              {user?.email || "No email provided"}
-            </p>
-            <p className="text-gray-500 mt-2">
-              Joined:{" "}
-              {user?.createdAt
-                ? new Date(user.createdAt).toLocaleDateString()
-                : "N/A"}
-            </p>
-          </div>
-        </div>
-
-        {/* My Books Section */}
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl lg:text-4xl font-bold text-gray-800 mb-8 text-center">
-            <span className="bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
-              My Books
-            </span>
-          </h2>
-
-          {/* Genre Filters */}
-          <div className="mb-8 text-center">
-            <p className="text-gray-600 mb-4 font-medium">Filter by Genre:</p>
-            <div className="flex flex-wrap justify-center gap-3">
-              <button
-                onClick={() => setSelectedGenre(null)}
-                className={`px-4 py-2 rounded-full text-gray-700 transition-colors border border-amber-200 hover:border-amber-400 ${
-                  !selectedGenre
-                    ? "bg-amber-100 text-amber-800 font-medium"
-                    : "bg-white bg-opacity-80 backdrop-blur-sm"
-                }`}
-              >
-                All
-              </button>
-              {genres.map((genre) => (
-                <button
-                  key={genre}
-                  onClick={() => setSelectedGenre(genre)}
-                  className={`px-4 py-2 rounded-full text-gray-700 transition-colors border border-amber-200 hover:border-amber-400 ${
-                    selectedGenre === genre
-                      ? "bg-amber-100 text-amber-800 font-medium"
-                      : "bg-white bg-opacity-80 backdrop-blur-sm"
-                  }`}
-                >
-                  {genre}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Books Display */}
-          {isLoading ? (
-            <div className="text-center text-gray-600">Loading books...</div>
-          ) : displayedBooks.length === 0 ? (
-            <div className="text-center text-gray-600">
-              No books{" "}
-              {selectedGenre ? `found for ${selectedGenre}` : "added yet"}.{" "}
-              <Link
-                to="/add-book"
-                className="text-amber-600 hover:text-amber-800 underline"
-              >
-                Add your first book!
-              </Link>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {displayedBooks.map((book) => (
-                <Link
-                  key={book._id}
-                  to={`/book-details/${book._id}`}
-                  className="bg-white bg-opacity-70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white border-opacity-50 hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-                >
-                  <div className="flex items-start gap-4">
-                    <div className="w-16 h-24 bg-gradient-to-br from-amber-500 to-orange-500 rounded-lg flex items-center justify-center flex-shrink-0 shadow-md">
-                      {book.image ? (
-                        <img
-                          src={book.image}
-                          alt={book.title}
-                          className="w-full h-full object-cover rounded-lg"
-                        />
-                      ) : (
-                        <BookOutlined className="text-white text-2xl" />
-                      )}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-gray-800 text-lg truncate mb-1">
-                        {book.title}
-                      </h3>
-                      <p className="text-sm text-gray-600 mb-1">
-                        <span className="font-medium">Author:</span>{" "}
-                        {book.author}
-                      </p>
-                      <p className="text-sm text-gray-600 mb-1">
-                        <span className="font-medium">Genre:</span> {book.genre}
-                      </p>
-                      <p className="text-sm text-gray-500">
-                        <span className="font-medium">Published:</span>{" "}
-                        {book.publicationDate
-                          ? new Date(book.publicationDate).getFullYear()
-                          : "N/A"}
-                      </p>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          )}
-        </div>
+        <UserDetails user={user} />
+        <MyBooks
+          selectedGenre={selectedGenre}
+          setSelectedGenre={setSelectedGenre}
+          genres={genres}
+          isLoading={isLoading}
+          displayedBooks={displayedBooks}
+          handleEditBook={handleEditBook}
+          handleDeleteBook={handleDeleteBook}
+          isDeleting={isDeleting}
+        />
       </div>
+
+      <EditBookModal
+        editingBook={editingBook}
+        setEditingBook={setEditingBook}
+        setEditFormData={setEditFormData}
+        editFormData={editFormData}
+        handleInputChange={handleInputChange}
+        handleSaveEdit={handleSaveEdit}
+        isEditing={isEditing}
+      />
     </div>
   );
 }

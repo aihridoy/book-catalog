@@ -247,7 +247,7 @@ export default function Navbar() {
                   <BookOutlined />
                   Add Book
                 </Link>
-                <Dropdown overlay={profileMenu} trigger={["click"]}>
+                <Dropdown overlay={profileMenu} trigger={["hover"]}>
                   <button className="flex items-center gap-2 px-5 py-2.5 text-gray-200 hover:text-white hover:bg-gray-700 rounded-full transition-all duration-300 font-medium shadow-md hover:shadow-lg">
                     <UserOutlined />
                     <span>{user?.username?.split(" ")[0] || "Profile"}</span>

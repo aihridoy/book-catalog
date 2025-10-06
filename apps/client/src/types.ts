@@ -8,7 +8,6 @@ export interface IUser {
   __v?: number;
   token?: string;
 }
-
 export interface AuthResponse {
   status: boolean;
   data: IUser & { token: string };
@@ -51,4 +50,25 @@ export interface IBookResponse {
   status: boolean;
   data: IBook[];
   error?: string;
+}
+
+export interface MyBooksProps {
+  selectedGenre: string | null;
+  setSelectedGenre: (genre: string | null) => void;
+  genres: string[];
+  isLoading: boolean;
+  displayedBooks: IBook[];
+  handleEditBook: (book: IBook) => void;
+  handleDeleteBook: (bookId: string) => void;
+  isDeleting: boolean;
+}
+
+export interface EditBookModalProps {
+  editingBook: IBook | null;
+  setEditingBook: (book: IBook | null) => void;
+  setEditFormData: (data: Partial<IBook>) => void;
+  editFormData: Partial<IBook>;
+  handleInputChange: (field: keyof IBook, value: string) => void;
+  handleSaveEdit: () => void;
+  isEditing: boolean;
 }
