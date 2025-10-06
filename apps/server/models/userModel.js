@@ -7,6 +7,13 @@ const userSchema = new mongoose.Schema(
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true, minlength: 6 },
     username: { type: String, required: true, unique: true, minlength: 3 },
+
+    favorites: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Book",
+      },
+    ],
   },
   { timestamps: true }
 );

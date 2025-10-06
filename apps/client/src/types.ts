@@ -7,6 +7,7 @@ export interface IUser {
   updatedAt?: string;
   __v?: number;
   token?: string;
+  favorites?: string[];
 }
 export interface AuthResponse {
   status: boolean;
@@ -71,4 +72,11 @@ export interface EditBookModalProps {
   handleInputChange: (field: keyof IBook, value: string) => void;
   handleSaveEdit: () => void;
   isEditing: boolean;
+}
+
+export interface FavoritesResponse {
+  status: boolean;
+  data: string[] | IBook[];
+  message?: string;
+  error?: string;
 }

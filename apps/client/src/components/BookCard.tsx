@@ -2,12 +2,20 @@ import {
   BookOutlined,
   CalendarOutlined,
   EyeOutlined,
+  HeartFilled,
   HeartOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Button, Card, Tag } from "antd";
+import { Button, Card, Tag, message } from "antd";
 import { Link } from "react-router";
+import { useState, useEffect } from "react";
 import type { IBook, IUser } from "../types";
+import {
+  useAddToFavoritesMutation,
+  useRemoveFromFavoritesMutation,
+  useGetFavoritesQuery,
+} from "../redux/features/favorite/favoriteApi";
+
 const { Meta } = Card;
 
 export default function BookCard({
@@ -17,6 +25,57 @@ export default function BookCard({
   book: IBook;
   user: IUser | null;
 }) {
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  const { data: favoritesData } = useGetFavoritesQuery(undefined, {
+    skip: !user,
+  });
+  const [addToFavorites, { isLoading: isAdding }] = useAddToFavoritesMutation();
+  const [removeFromFavorites, { isLoading: isRemoving }] =
+    useRemoveFromFavoritesMutation();
+
+  useEffect(() => {
+    if (favoritesData?.data && book._id) {
+      const favorites = favoritesData.data;
+      const isFav = Array.isArray(favorites)
+        ? favorites.some((fav) =>
+            typeof fav === "string" ? fav === book._id : fav._id === book._id
+          )
+        : false;
+      setIsFavorite(isFav);
+    }
+  }, [favoritesData, book._id]);
+
+  const handleToggleFavorite = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!user) {
+      message.warning("Please login to add favorites");
+      return;
+    }
+
+    if (!book._id) return;
+
+    try {
+      if (isFavorite) {
+        await removeFromFavorites(book._id).unwrap();
+        message.success("Removed from favorites");
+      } else {
+        await addToFavorites({ bookId: book._id }).unwrap();
+        message.success("Added to favorites");
+      }
+    } catch (error) {
+      message.error(
+        typeof error === "string"
+          ? error
+          : (error as Error)?.message || "Failed to update favorites"
+      );
+    }
+  };
+
+  const isLoading = isAdding || isRemoving;
+
   return (
     <div>
       <Card
@@ -41,7 +100,6 @@ export default function BookCard({
                 </Tag>
               </div>
             )}
-            {/* <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-500"></div> */}
           </div>
         }
         bodyStyle={{ padding: "20px" }}
@@ -58,7 +116,6 @@ export default function BookCard({
                 <UserOutlined className="mr-2 text-amber-600" />
                 <span className="text-sm font-medium">{book.author}</span>
               </div>
-
               <div className="flex items-center justify-between">
                 <Tag
                   color="orange"
@@ -71,7 +128,6 @@ export default function BookCard({
                   {new Date(book.publicationDate).getFullYear()}
                 </div>
               </div>
-
               <div className="flex gap-2 mt-4 pt-4 border-t border-gray-100">
                 <Link to={`/book-details/${book?._id}`}>
                   <Button
@@ -85,10 +141,17 @@ export default function BookCard({
                 </Link>
                 <Button
                   size="small"
-                  className="border-amber-300 text-amber-700 hover:bg-amber-50 hover:border-amber-400 transition-all duration-300 hover:scale-105"
-                  icon={<HeartOutlined />}
+                  className={`border-amber-300 transition-all duration-300 hover:scale-105 ${
+                    isFavorite
+                      ? "bg-amber-50 text-red-600 border-red-300"
+                      : "text-amber-700 hover:bg-amber-50 hover:border-amber-400"
+                  }`}
+                  icon={isFavorite ? <HeartFilled /> : <HeartOutlined />}
+                  onClick={handleToggleFavorite}
+                  loading={isLoading}
+                  disabled={isLoading}
                 >
-                  Save
+                  {isFavorite ? "Saved" : "Save"}
                 </Button>
               </div>
             </div>

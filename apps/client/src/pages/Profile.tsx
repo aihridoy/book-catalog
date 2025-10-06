@@ -10,6 +10,7 @@ import UserDetails from "../components/UserDetails";
 import MyBooks from "../components/MyBooks";
 import EditBookModal from "../components/EditBookModal";
 import type { IBook } from "../types";
+import FavoriteBooks from "../components/FavoriteBooks";
 
 export default function Profile() {
   const { user } = useAppSelector((state) => state.user);
@@ -117,6 +118,8 @@ export default function Profile() {
         handleSaveEdit={handleSaveEdit}
         isEditing={isEditing}
       />
+
+      <FavoriteBooks />
     </div>
   );
 }
