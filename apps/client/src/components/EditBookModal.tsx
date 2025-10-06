@@ -40,7 +40,7 @@ export default function EditBookModal({
                   setEditingBook(null);
                   setEditFormData({});
                 }}
-                className="text-gray-400 hover:text-gray-600 p-2 rounded-full hover:bg-gray-100 hover:bg-opacity-70 transition-all duration-200 transform hover:scale-110"
+                className="text-gray-400 hover:text-gray-600 cursor-pointer p-2 rounded-full hover:bg-gray-100 hover:bg-opacity-70 transition-all duration-200 transform hover:scale-110"
               >
                 <CloseOutlined className="text-lg" />
               </button>
@@ -139,7 +139,7 @@ export default function EditBookModal({
                   setEditingBook(null);
                   setEditFormData({});
                 }}
-                className="flex-1 px-6 py-3 border-2 border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 hover:bg-opacity-70 transition-all duration-300 font-medium transform hover:scale-105"
+                className="cursor-pointer flex-1 px-6 py-3 border-2 border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 hover:bg-opacity-70 transition-all duration-300 font-medium transform hover:scale-105"
               >
                 Cancel
               </button>
@@ -151,7 +151,7 @@ export default function EditBookModal({
                   !editFormData.author ||
                   !editFormData.genre
                 }
-                className="flex-1 px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-xl transition-all duration-300 font-medium transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg"
+                className="cursor-pointer flex-1 px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-xl transition-all duration-300 font-medium transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg"
               >
                 {isEditing ? (
                   <div className="flex items-center justify-center gap-2">

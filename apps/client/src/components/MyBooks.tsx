@@ -148,7 +148,7 @@ export default function MyBooks({
                 <Tooltip title="Edit Book" placement="top">
                   <button
                     onClick={() => handleEditBook(book)}
-                    className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-110"
+                    className="bg-blue-500 hover:bg-blue-600 cursor-pointer text-white px-3 py-2 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-110"
                   >
                     <EditOutlined />
                   </button>
@@ -199,7 +199,7 @@ export default function MyBooks({
                 >
                   <Tooltip title="Delete Book" placement="top">
                     <button
-                      className="bg-red-500 hover:bg-red-600 text-white px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none text-sm sm:text-base"
+                      className="bg-red-500 hover:bg-red-600 cursor-pointer text-white px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none text-sm sm:text-base"
                       disabled={isDeleting}
                     >
                       <DeleteOutlined />
